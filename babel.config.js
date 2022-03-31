@@ -1,9 +1,4 @@
 module.exports = {
-    env: {
-      test: {
-        presets: [
-          'react-app',
-        ],
-      },
-    },
+    presets: ['react-app'],
+    plugins: ["@babel/plugin-syntax-import-meta"],
 }
