@@ -53,7 +53,7 @@ describe('App', () => {
         render(<App />);
         await screen.findByText(/AGENCIA ESTATAL DE METEOROLOGÍA/);
 
-        expect(axios.get).toHaveBeenCalledWith('https://opendata.aemet.es/opendata/api/prediccion/ccaa/hoy/and?api_key=123')
+        expect(axios.get).toHaveBeenCalledWith('https://opendata.aemet.es/opendata/api/prediccion/ccaa/manana/and?api_key=123')
         expect(axios.get).toHaveBeenCalledWith('https://opendata.aemet.es/opendata/sh/63abfabe')
     })
 
@@ -79,6 +79,6 @@ describe('App', () => {
         const regionSelect = screen.getByLabelText('Comunidad:');
         userEvent.selectOptions(regionSelect, 'Andalucía');
 
-        expect(axios.get).toHaveBeenCalledWith('https://opendata.aemet.es/opendata/api/prediccion/ccaa/hoy/and?api_key=123')
+        expect(axios.get).toHaveBeenCalledWith('https://opendata.aemet.es/opendata/api/prediccion/ccaa/manana/and?api_key=123')
     })
 })
