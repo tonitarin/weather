@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import axios from "axios";
 import App from '../App';
 
@@ -52,7 +53,32 @@ describe('App', () => {
         render(<App />);
         await screen.findByText(/AGENCIA ESTATAL DE METEOROLOGÍA/);
 
-        expect(axios.get).toHaveBeenCalledWith('https://opendata.aemet.es/opendata/api/prediccion/ccaa/hoy/val?api_key=123')
+        expect(axios.get).toHaveBeenCalledWith('https://opendata.aemet.es/opendata/api/prediccion/ccaa/hoy/and?api_key=123')
         expect(axios.get).toHaveBeenCalledWith('https://opendata.aemet.es/opendata/sh/63abfabe')
+    })
+
+    it('should get weather prevision by region selection', async () => {
+        axios.get.mockResolvedValueOnce({
+            data: {
+                    "descripcion": "exito",
+                    "estado": 200,
+                    "datos": "https://opendata.aemet.es/opendata/sh/63abfabe",
+                    "metadatos": "https://opendata.aemet.es/opendata/sh/0548758c"
+                }
+            });
+        axios.get.mockResolvedValueOnce({
+            data: `
+                AGENCIA ESTATAL DE METEOROLOGÍA
+
+                PREDICCIÓN GENERAL PARA LA COMUNIDAD DE VALENCIA
+            `
+            });
+        render(<App />);
+        await screen.findByText('INFO METEOROLOGICA');
+
+        const regionSelect = screen.getByLabelText('Comunidad:');
+        userEvent.selectOptions(regionSelect, 'Andalucía');
+
+        expect(axios.get).toHaveBeenCalledWith('https://opendata.aemet.es/opendata/api/prediccion/ccaa/hoy/and?api_key=123')
     })
 })

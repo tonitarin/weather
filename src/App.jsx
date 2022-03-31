@@ -1,26 +1,50 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { regionClient } from './app/client/region';
+import { REGION_CONSTANTS } from './app/domain/region';
 import './App.css'
 
 const App = () => {
-    const [ info, setInfo] = useState(null)
+    const { REGION_CODE, REGION_NAME} = REGION_CONSTANTS;
+    const regionsCodes = Object.values(REGION_CODE);
+
+    const [ info, setInfo ] = useState(null)
+    const [ region, setRegion ] = useState('and');
+
     const getWeatherInfo = async () => {
-       const { data } = await axios.get(`${process.env.VITE_API_BASE_URL}/prediccion/ccaa/hoy/val?api_key=${process.env.VITE_API_KEY}`);
-       const { datos: infoURL } = data;
-
-       const { data: textInfo} = await axios.get(infoURL);
-
-       setInfo(textInfo)
+        const info = await regionClient.getWeatherInfoByRegion(region);
+        setInfo(info.replace(/\n/g, "<br>"));
     }
+
+    const handleRegionSelect = ({ target }) => {
+        const { value } = target;
+        setRegion(value);
+    }
+
     useEffect(() => {
         getWeatherInfo();
-    }, [])
+    }, [region])
 
     return (
         <div className="App">
             <h1>INFO METEOROLOGICA</h1>
+            <label>
+                Comunidad:
+                <select onChange={handleRegionSelect}>
+                    {
+                        regionsCodes
+                            .map(regionKey =>
+                                <option
+                                    key={regionKey}
+                                    value={regionKey}
+                                >
+                                    {REGION_NAME[regionKey]}
+                                </option>
+                            )
+                    }
+                </select>
+            </label>
             {
-                info && info
+                info && <p dangerouslySetInnerHTML={{__html: info}}></p>
             }
         </div>
     );
