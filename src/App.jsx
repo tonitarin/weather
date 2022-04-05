@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { regionClient } from './app/client/region';
 import { REGION_CONSTANTS } from './app/domain/region';
+import { Selector } from './components/selector';
 import './App.css';
 
 function App() {
-  const { REGION_CODE, REGION_NAME } = REGION_CONSTANTS;
-  const regionsCodes = Object.values(REGION_CODE);
+  const { REGION_NAME } = REGION_CONSTANTS;
 
   const [info, setInfo] = useState(null);
   const [region, setRegion] = useState('and');
@@ -27,25 +27,14 @@ function App() {
   return (
     <div className="App">
       <h1>Weather</h1>
-      <label>
-        Comunidad:
-        <select onChange={handleRegionSelect}>
-          {
-                        regionsCodes
-                          .map((regionKey) => (
-                            <option
-                              key={regionKey}
-                              value={regionKey}
-                            >
-                              {REGION_NAME[regionKey]}
-                            </option>
-                          ))
-                    }
-        </select>
-      </label>
+      <Selector
+        label="Comunidad:"
+        options={REGION_NAME}
+        onChange={handleRegionSelect}
+      />
       {
                 info && <p dangerouslySetInnerHTML={{ __html: info }} />
-            }
+        }
     </div>
   );
 }
