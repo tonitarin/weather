@@ -11,7 +11,7 @@ describe('Loader', () => {
     expect(loader).toBeInTheDocument();
   });
 
-  it('should not show loader when isLoading is false', async () => {
+  it('should not show loader when isLoading is false', () => {
     render(<Loader isLoading={false} />);
 
     const loader = screen.queryByText('Loading...');
